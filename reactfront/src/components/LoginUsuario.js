@@ -17,7 +17,6 @@ const LoginUsuario = () => {
         window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
      
       navigate('/inicio')
-      alert(`Bienvenido/a ${username}`)
 
     }
   return (
