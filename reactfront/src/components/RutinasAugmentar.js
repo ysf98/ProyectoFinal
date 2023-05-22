@@ -24,7 +24,7 @@ const RutinasAugmentar = () => {
     <div>
         {Nav()}
         <div className='container-fluid mt-3'>
-            <h3>Rutinas para augmentar músculo</h3>  
+            <h3>Rutinas para aumentar músculo</h3>  
             <table className='table table-striped'>
                 <thead className='bg-dark text-white'>
                     <tr>
