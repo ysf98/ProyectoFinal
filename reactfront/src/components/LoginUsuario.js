@@ -17,7 +17,10 @@ const LoginUsuario = () => {
         window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
      
       navigate('/inicio')
+<<<<<<< HEAD
       
+=======
+>>>>>>> 18ed80641eb8a679eba3934b08dfbb271d137021
 
     }
   return (

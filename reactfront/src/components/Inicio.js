@@ -7,7 +7,11 @@ const Inicio = () => {
     
     <div>
       {Nav()}
+<<<<<<< HEAD
       <div className='container-fluid mt-3 '>
+=======
+      <div className='container-fluid mt-3'>
+>>>>>>> 18ed80641eb8a679eba3934b08dfbb271d137021
         <div className='row m-2 justify-content-center'>  
           <h3>Página de inicio</h3>  
           <div className="card m-3 col-xs-10  col-md-6 col-lg-6 col-xl-3" >
