@@ -17,11 +17,6 @@ const LoginUsuario = () => {
         window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
      
       navigate('/inicio')
-<<<<<<< HEAD
-      
-=======
->>>>>>> 18ed80641eb8a679eba3934b08dfbb271d137021
-
     }
   return (
     <div className='container border border-secondary mt-3 rounded col-xl-4 col-lg-4 col-md-6 col-sm-8 mt-5'>
