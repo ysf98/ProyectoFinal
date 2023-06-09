@@ -17,11 +17,11 @@ const LoginUsuario = () => {
         window.localStorage.setItem('loggedUser', JSON.stringify(response.data))
      
       navigate('/inicio')
-      alert(`Bienvenido/a ${username}`)
+      
 
     }
   return (
-    <div className='container border border-secondary mt-3 rounded col-4 mt-5'>
+    <div className='container border border-secondary mt-3 rounded col-xl-4 col-lg-4 col-md-6 col-sm-8 mt-5'>
         <h3>Login</h3>
         <form onSubmit={login}>
             <div className='m-4'>

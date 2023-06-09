@@ -20,7 +20,7 @@ const DefaultRutinas = () => {
               <p> Rutina basada en una mayor parte de ejercicios de cardio y una parte de ejercicios de musculación a altas repeticiones con poco peso. </p>
             </section>
             <section name="augmentarmusc">
-              <h4>Augmentar músculo:</h4>
+              <h4>Aumentar músculo:</h4>
               <p> Rutina basada en una mayor parte de ejercicios de musculación a bajas repeticiones con peso más elevado. </p>      
             </section>
             </div>     
@@ -37,7 +37,7 @@ const DefaultRutinas = () => {
             <div className="card col m-3" >
               <img src="https://okdiario.com/img/vida-sana/2015/08/hipertrofia.jpg" className="card-img-top"/>
               <div className="card-body">
-                <h5 className="card-title">Augmentar Músculo</h5>
+                <h5 className="card-title">Aumentar Músculo</h5>
                 <a href="/augmentarpeso" className="stretched-link"></a>
               </div>
             </div>          

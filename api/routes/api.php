@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\RegisterController;
 use App\Http\Controllers\Api\LoginController;
 use App\Http\Controllers\Api\Rutina_amController;
 use App\Http\Controllers\Api\Rutina_bpController;
+use App\Http\Controllers\Api\ExerciseController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,7 +28,10 @@ Route::controller(RutinaController::class)->group(function (){
     Route::get('/rutinas', 'index');
     Route::post('/rutina', 'store');
     Route::get('/rutina/{id}', 'show');
+    Route::get('/rutina/{userId}/{rutinaId}', 'userRoutine');
+
     Route::get('/rutinasuser/{id}', 'showusers');
+    Route::get('/users/{userId}/routines/{routineId}','rutinaej');
     Route::put('/rutina/{id}', 'update');
     Route::delete('/rutina/{id}', 'destroy');
 });
@@ -48,7 +52,9 @@ Route::controller(RegisterController::class)->group(function (){
 
 });
 
-
+Route::controller(ExerciseController::class)->group(function (){
+    Route::get('/exercises', 'index');
+});
 
 Route::controller(LoginController::class)->group(function (){
     Route::post('/login', 'login');

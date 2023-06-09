@@ -13,8 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('rutinas', function (Blueprint $table) {
-            $table->integer('user_id');
+        Schema::create('exercises', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('video_url')->nullable();
+
+            $table->timestamps();
         });
     }
 
@@ -25,8 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('rutinas', function (Blueprint $table) {
-            $table->dropColumn('user_id');
-        });
+        Schema::dropIfExists('exercises');
     }
 };

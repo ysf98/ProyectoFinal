@@ -3,18 +3,30 @@ import axios from 'axios'
 import {Link, useParams} from 'react-router-dom'
 import Nav from './Nav'
 
-const api = 'http://localhost:8000/api/rutina/'
+const api = 'http://localhost:8000/api/rutina'
 const ShowRutinaCompleta = () => {
 
-    const {id}= useParams()
+    const {rutinaId}= useParams()
     const [rutinas , setRutinas] = useState([])
+    const [userId,setUserId] = useState('')
+
 
   useEffect (()=>{
     getRutina()
   }, [])
 
+  useEffect(()=> {
+    const userdata = window.localStorage.getItem('loggedUser')
+    if (userdata) {
+      const user = JSON.parse(userdata)
+      
+      setUserId(user.id)
+
+    }
+  }, [])
+
   const getRutina = async () =>{
-    const response = await axios.get(`${api}${id}`)
+    const response = await axios.get(`${api}/${userId}${rutinaId}`)
     setRutinas(response.data)
     console.log(response.data) 
   }
@@ -37,38 +49,10 @@ const ShowRutinaCompleta = () => {
                 <td>{rutinas.dia}</td>
             </tr>
             <tr>
-                <th scope="row">1º Ejercicio</th>
-                <td>{rutinas.Ejercicio_1}</td>
+                <th scope="row">Ejercicios</th>
+                <td></td>
             </tr>
-            <tr>
-                <th scope="row">2º Ejercicio</th>
-                <td>{rutinas.Ejercicio_2}</td>
-            </tr>
-            <tr>
-                <th scope="row">3º Ejercicio</th>
-                <td>{rutinas.Ejercicio_3}</td>
-            </tr>
-            <tr>
-                <th scope="row">4º Ejercicio</th>
-                <td>{rutinas.Ejercicio_4}</td>
-            </tr>
-            <tr>
-                <th scope="row">5º Ejercicio</th>
-                <td>{rutinas.Ejercicio_5}</td>
-            </tr>
-            <tr>
-                <th scope="row">6º Ejercicio</th>
-                <td>{rutinas.Ejercicio_6}</td>
-            </tr>
-            <tr>
-                <th scope="row">7º Ejercicio</th>
-                <td>{rutinas.Ejercicio_7}</td>
-            </tr>
-            <tr>
-                <th scope="row">8º Ejercicio</th>
-                <td>{rutinas.Ejercicio_8}</td>
-            </tr>
-
+            
             </tbody>
         </table>
         <Link to={`/edit/${rutinas.id}`} className='btn btn-warning m-1'>Editar</Link>
