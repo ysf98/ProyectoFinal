@@ -70,51 +70,58 @@ const CreateRutinas = () => {
   return (
     <div>
       {Nav()}   
-      <div>
-      <h2>Crear Rutina</h2>
+      <div className='container mt-3 border'>
+      <h2 className='mt-2'>Crear Rutina</h2>
+      
       <form onSubmit={store}>
-        <div>
-          <label htmlFor="routine-name">Nombre de la Rutina:</label>
-          <input
-            type="text"
-            id="routine-name"
-            value={dia}
-            onChange={event => setDia(event.target.value)}
-          />
+         <div className='m-4'>
+          <h5 htmlFor="routine-name">Nombre de la Rutina:</h5>
+            <div>
+            <input
+              type="text"
+              id="routine-name"
+              value={dia}
+              onChange={event => setDia(event.target.value)}
+            />
+            </div>
+         </div>
+        <div className='m-3'>
+          <h5 htmlFor="exercise-select">Ejercicios:</h5>
+          <div >
+            <select
+              id="exercise-select"
+              value=""
+              onChange={handleExerciseChange}
+            >
+              <option value="" disabled>Selecciona un ejercicio</option>
+              {exercises.map(exercise => (
+                <option key={exercise.id} value={exercise.id}>
+                  {exercise.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
-        <div>
-          <label htmlFor="exercise-select">Ejercicios:</label>
-          <select
-            id="exercise-select"
-            value=""
-            onChange={handleExerciseChange}
-          >
-            <option value="" disabled>Selecciona un ejercicio</option>
-            {exercises.map(exercise => (
-              <option key={exercise.id} value={exercise.id}>
-                {exercise.name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <p>Ejercicios seleccionados: {selectedExercises.length}</p>
-          <ul>
+        <div >
+          <h5>Ejercicios seleccionados: {selectedExercises.length}</h5>
+          
+          <ul >
             {selectedExercises.map(exerciseId => {
               const exercise = exercises.find(ex => ex.id === exerciseId);
               return (
-                <li key={exerciseId}>
+                <p key={exerciseId}>
                   {exercise.name}
-                  <button type="button" onClick={() => handleRemoveExercise(exerciseId)}>
-                    Eliminar
+                  <button type="button" className='btn btn-danger m-1 text-white' onClick={() => handleRemoveExercise(exerciseId)}>
+                    -
                   </button>
-                </li>
+                </p>
               );
             })}
           </ul>
         </div>
 
-        <button type="submit">Guardar Rutina</button>
+        <button className='btn btn-dark m-2 text-white' type="submit">Guardar</button>
+        <Link to="/inicio" className='btn btn-primary m-2 text-white'>Inicio</Link>
       </form>
     </div>
     </div>    

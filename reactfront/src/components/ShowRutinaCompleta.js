@@ -3,33 +3,26 @@ import axios from 'axios'
 import {Link, useParams} from 'react-router-dom'
 import Nav from './Nav'
 
-const api = 'http://localhost:8000/api/rutina'
+const api = 'http://localhost:8000/api/rutina/'
 const ShowRutinaCompleta = () => {
 
-    const {rutinaId}= useParams()
+    const {id}= useParams()
     const [rutinas , setRutinas] = useState([])
-    const [userId,setUserId] = useState('')
 
 
   useEffect (()=>{
-    getRutina()
-  }, [])
-
-  useEffect(()=> {
-    const userdata = window.localStorage.getItem('loggedUser')
-    if (userdata) {
-      const user = JSON.parse(userdata)
-      
-      setUserId(user.id)
-
+    const getRutina = async () =>{
+      const response = await axios.get(`${api}${id}`)
+      setRutinas(response.data)
+      console.log(response.data) 
     }
-  }, [])
+    getRutina()
+  },[id])
 
-  const getRutina = async () =>{
-    const response = await axios.get(`${api}/${userId}${rutinaId}`)
-    setRutinas(response.data)
-    console.log(response.data) 
+  if (!rutinas) {
+    return <div>Cargando rutina...</div>;
   }
+  
 
   return (
     <div>
@@ -37,21 +30,25 @@ const ShowRutinaCompleta = () => {
         <div className='container mt-3 border'>
         <h2 className='mt-2'>Rutina completa '{rutinas.dia}'</h2>
         <table className='table table-striped'>
-            <thead className=' text-white'>
+            <thead className='bg-dark text-white'>
             <tr>
-                    <th scope='col'></th>
-                    <th scope='col'></th>
-                </tr>
+              <th scope='col'>Ejercicio</th>
+              <th scope='col'>Video</th>
+            </tr>
             </thead>
             <tbody>
-            <tr>
-                <th scope="row">Nombre</th>
-                <td>{rutinas.dia}</td>
+            {rutinas.exercises?.map((exercise) => (
+            <tr key={exercise.id}>
+              <td className=''>{exercise.name}</td>
+              <td>
+                {exercise.video_url && (
+                  <a href={exercise.video_url} target="_blank" rel="noopener noreferrer">
+                    Ver video
+                  </a>
+                )}
+              </td>
             </tr>
-            <tr>
-                <th scope="row">Ejercicios</th>
-                <td></td>
-            </tr>
+          ))}
             
             </tbody>
         </table>

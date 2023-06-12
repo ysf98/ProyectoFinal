@@ -4,365 +4,146 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import Nav from './Nav'
 
 const api = 'http://localhost:8000/api/rutina/'
+const apiexc = 'http://localhost:8000/api/exercises'
+
 
 const EditRutinas = () => {
 
     
-    const [dia, setDia] = useState('')
-    const [ Ejercicio_1, setEj1] = useState('')
-    const [ Ejercicio_2, setEj2] = useState('')
-    const [ Ejercicio_3, setEj3] = useState('')
-    const [ Ejercicio_4, setEj4] = useState('')
-    const [ Ejercicio_5, setEj5] = useState('')
-    const [ Ejercicio_6, setEj6] = useState('')
-    const [ Ejercicio_7, setEj7] = useState('')
-    const [ Ejercicio_8, setEj8] = useState('')
+    const [routineName, setRoutineName] = useState('');
+    const [selectedExercises, setSelectedExercises] = useState([]);
+    const [exercises, setExercises] = useState([]);
+    const [newExercise, setNewExercise] = useState('');
+
+
     const navigate = useNavigate()
     const {id}= useParams()
+    useEffect(() => {
+      fetchRoutine();
+      fetchExercises();
+    }, []);
+  
+    const fetchRoutine = async () => {
+      try {
+        const response = await axios.get(`${api}${id}`);
+  
+        setRoutineName(response.data.dia);
+        setSelectedExercises(response.data.exercises);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    const fetchExercises = async () => {
+      try {
+        const response = await axios.get(`${apiexc}`);
+        setExercises(response.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    const handleExerciseChange = (exerciseId, index) => {
+      const selectedExercise = exercises.find((exercise) => exercise.id === exerciseId);
+  
+      setSelectedExercises((prevExercises) => {
+        const updatedExercises = [...prevExercises];
+        updatedExercises[index] = selectedExercise;
+        return updatedExercises;
+      });
+    };
 
+     // Agregar un ejercicio seleccionado a la rutina
+  const addExercise = () => {
+    const exercise = exercises.find((exercise) => exercise.id === parseInt(newExercise));
+    setSelectedExercises([...selectedExercises, exercise]);
+    setNewExercise('');
+  };
 
-    const update = async (e)=>{
-        e.preventDefault()
-        await axios.put(`${api}${id}` , {
-            dia: dia,
-            Ejercicio_1: Ejercicio_1,
-            Ejercicio_2: Ejercicio_2,
-            Ejercicio_3: Ejercicio_3,
-            Ejercicio_4: Ejercicio_4,
-            Ejercicio_5: Ejercicio_5,
-            Ejercicio_6: Ejercicio_6,
-            Ejercicio_7: Ejercicio_7,
-            Ejercicio_8: Ejercicio_8,
+  // Eliminar un ejercicio seleccionado de la rutina
+  const removeExercise = (exerciseId) => {
+    const updatedExercises = selectedExercises.filter((exercise) => exercise.id !== exerciseId);
+    setSelectedExercises(updatedExercises);
+  };
+  
+    const handleSubmit = async () => {
+      try {
+        const response = await axios.put(`${api}${id}`, {
+          dia: routineName,
+          exercises: selectedExercises.map((exercise) => exercise.id),
         });
-        navigate(`/show/${id}`)
-    }
-
-    useEffect( ()=>{
-        const getRutinasById = async () => {
-            const response = await axios.get(`${api}${id}`)
-            setDia(response.data.dia)
-            setEj1(response.data.Ejercicio_1)
-            setEj2(response.data.Ejercicio_2)
-            setEj3(response.data.Ejercicio_3)
-            setEj4(response.data.Ejercicio_4)
-            setEj5(response.data.Ejercicio_5)
-            setEj6(response.data.Ejercicio_6)
-            setEj7(response.data.Ejercicio_7)
-            setEj8(response.data.Ejercicio_8)
-        }
-        getRutinasById()
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [] )
-
-  return (
-    <div>
-        {Nav()}
-        <div className='container col-4 mt-2'>
-            <h3>Editar Rutina</h3>
-            <form onSubmit={update}>
-                <div className='mb-3'>
-                    <label className='form-label'><strong>Día/Nombre</strong></label>
-                    <input 
-                        value={dia}
-                        onChange={ (e)=> setDia(e.target.value)}
-                        type='text'
-                        className='form-control text-center'>
-                    </input>
-                </div>
-                <div className='mb-3'>
-                    <label className='form-label'><strong>1º Ejercicio</strong></label>
-                    <select 
-                        value={Ejercicio_1}
-                        onChange={ (e)=> setEj1(e.target.value)}
-                        type='text'
-                        className='form-control text-center'>
-                        <option disabled>-----CARDIO-----</option>
-                        <option>SPINNIG 15 min</option>
-                        <option>CINTA 15 min</option>
-                        <option>SALTO A LA COMBA</option>
-                        <option disabled>-----PECHO-----</option>
-                        <option>PRESS DE BANCA</option>
-                        <option>PRESS CON MANCUERNAS</option>
-                        <option>PRESS DE BANCA INCLINADO</option>
-                        <option>FLEXIONES CON PESO</option>
-                        <option>CRUCES EN POLEA</option>
-                        <option disabled>-----ESPALDA-----</option>
-                        <option>DOMINADAS</option>
-                        <option>REMO CON BARRA</option>
-                        <option>REMO EN POLEA BAJA</option>
-                        <option>PESO MUERTO</option>
-                        <option>JALÓN AL PECHO</option>
-                        <option disabled>-----PIERNA-----</option>                    
-                        <option>SENTADILLA CON BARRA</option>
-                        <option>PRENSA</option>
-                        <option>PESO MUERTO RUMANO</option>
-                        <option>CURL FEMORAL</option>
-                        <option>EXTENSIÓN DE CUÁDRICEPS</option>
-                        <option>ELEVACIONES DE GEMELOS</option>
-                        <option disabled>-----HOMBRO-----</option>
-                        <option>ELEVACIONES LATERALES DE MANCUERNAS</option>
-                        <option>ELEVACIONES FRONTALES DE MANCUERNAS</option>
-                        <option>PRESS MILITAR</option>
-                        <option>PRESS ARNOLD</option>
-                        <option>--DESCANSO--</option>
-                        <option>--DIA LIBRE--</option>
-                    </select>  
-                </div>
-                <div className='mb-3'>
-                    <label className='form-label'><strong>2º Ejercicio</strong></label>
-                    <select 
-                        value={Ejercicio_2}
-                        onChange={ (e)=> setEj2(e.target.value)}
-                        type='text'
-                        className='form-control text-center'>
-                        <option disabled>-----CARDIO-----</option>
-                        <option>SPINNIG 15 min</option>
-                        <option>CINTA 15 min</option>
-                        <option>SALTO A LA COMBA</option>
-                        <option disabled>-----PECHO-----</option>
-                        <option>PRESS DE BANCA</option>
-                        <option>PRESS CON MANCUERNAS</option>
-                        <option>PRESS DE BANCA INCLINADO</option>
-                        <option>FLEXIONES CON PESO</option>
-                        <option>CRUCES EN POLEA</option>
-                        <option disabled>-----ESPALDA-----</option>
-                        <option>DOMINADAS</option>
-                        <option>REMO CON BARRA</option>
-                        <option>REMO EN POLEA BAJA</option>
-                        <option>PESO MUERTO</option>
-                        <option>JALÓN AL PECHO</option>
-                        <option disabled>-----PIERNA-----</option>                    
-                        <option>SENTADILLA CON BARRA</option>
-                        <option>PRENSA</option>
-                        <option>PESO MUERTO RUMANO</option>
-                        <option>CURL FEMORAL</option>
-                        <option>EXTENSIÓN DE CUÁDRICEPS</option>
-                        <option>ELEVACIONES DE GEMELOS</option>
-                        <option disabled>-----HOMBRO-----</option>
-                        <option>ELEVACIONES LATERALES DE MANCUERNAS</option>
-                        <option>ELEVACIONES FRONTALES DE MANCUERNAS</option>
-                        <option>PRESS MILITAR</option>
-                        <option>PRESS ARNOLD</option>
-                        <option>--DESCANSO--</option>
-                        <option>--DIA LIBRE--</option>
-                    </select>  
-                </div>
-                <div className='mb-3'>
-                    <label className='form-label'><strong>3º Ejercicio</strong></label>
-                    <select 
-                        value={Ejercicio_3}
-                        onChange={ (e)=> setEj3(e.target.value)}
-                        type='text'
-                        className='form-control text-center'>
-                        <option disabled>-----CARDIO-----</option>
-                        <option>SPINNIG 15 min</option>
-                        <option>CINTA 15 min</option>
-                        <option>SALTO A LA COMBA</option>
-                        <option disabled>-----PECHO-----</option>
-                        <option>PRESS DE BANCA</option>
-                        <option>PRESS CON MANCUERNAS</option>
-                        <option>PRESS DE BANCA INCLINADO</option>
-                        <option>FLEXIONES CON PESO</option>
-                        <option>CRUCES EN POLEA</option>
-                        <option disabled>-----ESPALDA-----</option>
-                        <option>DOMINADAS</option>
-                        <option>REMO CON BARRA</option>
-                        <option>REMO EN POLEA BAJA</option>
-                        <option>PESO MUERTO</option>
-                        <option>JALÓN AL PECHO</option>
-                        <option disabled>-----PIERNA-----</option>                    
-                        <option>SENTADILLA CON BARRA</option>
-                        <option>PRENSA</option>
-                        <option>PESO MUERTO RUMANO</option>
-                        <option>CURL FEMORAL</option>
-                        <option>EXTENSIÓN DE CUÁDRICEPS</option>
-                        <option>ELEVACIONES DE GEMELOS</option>
-                        <option disabled>-----HOMBRO-----</option>
-                        <option>ELEVACIONES LATERALES DE MANCUERNAS</option>
-                        <option>ELEVACIONES FRONTALES DE MANCUERNAS</option>
-                        <option>PRESS MILITAR</option>
-                        <option>PRESS ARNOLD</option>
-                        <option>--DESCANSO--</option>
-                        <option>--DIA LIBRE--</option>
-                    </select>  
-                </div>
-                <div className='mb-3'>
-                    <label className='form-label'><strong>4º Ejercicio</strong></label>
-                    <select 
-                        value={Ejercicio_4}
-                        onChange={ (e)=> setEj4(e.target.value)}
-                        type='text'
-                        className='form-control text-center'>
-                        <option disabled>-----CARDIO-----</option>
-                        <option>SPINNIG 15 min</option>
-                        <option>CINTA 15 min</option>
-                        <option>SALTO A LA COMBA</option>
-                        <option disabled>-----PECHO-----</option>
-                        <option>PRESS DE BANCA</option>
-                        <option>PRESS CON MANCUERNAS</option>
-                        <option>PRESS DE BANCA INCLINADO</option>
-                        <option>FLEXIONES CON PESO</option>
-                        <option>CRUCES EN POLEA</option>
-                        <option disabled>-----ESPALDA-----</option>
-                        <option>DOMINADAS</option>
-                        <option>REMO CON BARRA</option>
-                        <option>REMO EN POLEA BAJA</option>
-                        <option>PESO MUERTO</option>
-                        <option>JALÓN AL PECHO</option>
-                        <option disabled>-----PIERNA-----</option>                    
-                        <option>SENTADILLA CON BARRA</option>
-                        <option>PRENSA</option>
-                        <option>PESO MUERTO RUMANO</option>
-                        <option>CURL FEMORAL</option>
-                        <option>EXTENSIÓN DE CUÁDRICEPS</option>
-                        <option>ELEVACIONES DE GEMELOS</option>
-                        <option disabled>-----HOMBRO-----</option>
-                        <option>ELEVACIONES LATERALES DE MANCUERNAS</option>
-                        <option>ELEVACIONES FRONTALES DE MANCUERNAS</option>
-                        <option>PRESS MILITAR</option>
-                        <option>PRESS ARNOLD</option>
-                        <option>--DESCANSO--</option>
-                        <option>--DIA LIBRE--</option>
-                    </select>  
-                </div>
-                <div className='mb-3'>
-                    <label className='form-label'><strong>5º Ejercicio</strong></label>
-                    <select 
-                        value={Ejercicio_5}
-                        onChange={ (e)=> setEj5(e.target.value)}
-                        type='text'
-                        className='form-control text-center'>
-                        <option disabled>-----CARDIO-----</option>
-                        <option>SPINNIG 15 min</option>
-                        <option>CINTA 15 min</option>
-                        <option>SALTO A LA COMBA</option>
-                        <option disabled>-----BICEPS-----</option>
-                        <option>CURL DE BICEPS CON BARRA OLÍMPICA</option>
-                        <option>CURL CONCENTRADO</option>
-                        <option>CURL EN BARRA Z</option>
-                        <option>CURL MARTILLO</option>
-                        <option>FLEXIONES DE BICEPS EN POLEA</option>
-                        <option disabled>-----TRICEPS-----</option>
-                        <option>FLEXIONES CON MANOS JUNTAS</option>
-                        <option>EXTENSIONES EN TRX</option>
-                        <option>EXTENSIONES CON MANCUERNA EN BANCO</option>
-                        <option>PRESS FRANCÉS</option>
-                        <option>BARRAS PARALELAS</option>
-                        <option disabled>-----ABDOMINALES-----</option>                    
-                        <option>SIT UP</option>
-                        <option>ELEVACION DE PIERNAS</option>
-                        <option>PLANCHA ISOMÉTRICA</option>
-                        <option>MOUNTAIN CLIMBERS</option>
-                        <option>CABLE CRUNCH</option>
-                        <option>--DESCANSO--</option>
-                        <option>--DIA LIBRE--</option>
-                    </select>  
-                </div>
-                <div className='mb-3'>
-                    <label className='form-label'><strong>6º Ejercicio</strong></label>
-                    <select 
-                        value={Ejercicio_6}
-                        onChange={ (e)=> setEj6(e.target.value)}
-                        type='text'
-                        className='form-control text-center'>
-                        <option disabled>-----CARDIO-----</option>
-                        <option>SPINNIG 15 min</option>
-                        <option>CINTA 15 min</option>
-                        <option>SALTO A LA COMBA</option>
-                        <option disabled>-----BICEPS-----</option>
-                        <option>CURL DE BICEPS CON BARRA OLÍMPICA</option>
-                        <option>CURL CONCENTRADO</option>
-                        <option>CURL EN BARRA Z</option>
-                        <option>CURL MARTILLO</option>
-                        <option>FLEXIONES DE BICEPS EN POLEA</option>
-                        <option disabled>-----TRICEPS-----</option>
-                        <option>FLEXIONES CON MANOS JUNTAS</option>
-                        <option>EXTENSIONES EN TRX</option>
-                        <option>EXTENSIONES CON MANCUERNA EN BANCO</option>
-                        <option>PRESS FRANCÉS</option>
-                        <option>BARRAS PARALELAS</option>
-                        <option disabled>-----ABDOMINALES-----</option>                    
-                        <option>SIT UP</option>
-                        <option>ELEVACION DE PIERNAS</option>
-                        <option>PLANCHA ISOMÉTRICA</option>
-                        <option>MOUNTAIN CLIMBERS</option>
-                        <option>CABLE CRUNCH</option>
-                        <option>--DESCANSO--</option>
-                        <option>--DIA LIBRE--</option>
-                    </select>  
-                </div>
-                <div className='mb-3'>
-                    <label className='form-label'><strong>7º Ejercicio</strong></label>
-                    <select 
-                        value={Ejercicio_7}
-                        onChange={ (e)=> setEj7(e.target.value)}
-                        type='text'
-                        className='form-control text-center'>
-                        <option disabled>-----CARDIO-----</option>
-                        <option>SPINNIG 15 min</option>
-                        <option>CINTA 15 min</option>
-                        <option>SALTO A LA COMBA</option>
-                        <option disabled>-----BICEPS-----</option>
-                        <option>CURL DE BICEPS CON BARRA OLÍMPICA</option>
-                        <option>CURL CONCENTRADO</option>
-                        <option>CURL EN BARRA Z</option>
-                        <option>CURL MARTILLO</option>
-                        <option>FLEXIONES DE BICEPS EN POLEA</option>
-                        <option disabled>-----TRICEPS-----</option>
-                        <option>FLEXIONES CON MANOS JUNTAS</option>
-                        <option>EXTENSIONES EN TRX</option>
-                        <option>EXTENSIONES CON MANCUERNA EN BANCO</option>
-                        <option>PRESS FRANCÉS</option>
-                        <option>BARRAS PARALELAS</option>
-                        <option disabled>-----ABDOMINALES-----</option>                    
-                        <option>SIT UP</option>
-                        <option>ELEVACION DE PIERNAS</option>
-                        <option>PLANCHA ISOMÉTRICA</option>
-                        <option>MOUNTAIN CLIMBERS</option>
-                        <option>CABLE CRUNCH</option>
-                        <option>--DESCANSO--</option>
-                        <option>--DIA LIBRE--</option>
-                    </select>  
-                </div>
-                <div className='mb-3'>
-                    <label className='form-label'><strong>8º Ejercicio</strong></label>
-                    <select 
-                        value={Ejercicio_8}
-                        onChange={ (e)=> setEj8(e.target.value)}
-                        type='text'
-                        className='form-control text-center'>
-                        <option disabled>-----CARDIO-----</option>
-                        <option>SPINNIG 15 min</option>
-                        <option>CINTA 15 min</option>
-                        <option>SALTO A LA COMBA</option>
-                        <option disabled>-----BICEPS-----</option>
-                        <option>CURL DE BICEPS CON BARRA OLÍMPICA</option>
-                        <option>CURL CONCENTRADO</option>
-                        <option>CURL EN BARRA Z</option>
-                        <option>CURL MARTILLO</option>
-                        <option>FLEXIONES DE BICEPS EN POLEA</option>
-                        <option disabled>-----TRICEPS-----</option>
-                        <option>FLEXIONES CON MANOS JUNTAS</option>
-                        <option>EXTENSIONES EN TRX</option>
-                        <option>EXTENSIONES CON MANCUERNA EN BANCO</option>
-                        <option>PRESS FRANCÉS</option>
-                        <option>BARRAS PARALELAS</option>
-                        <option disabled>-----ABDOMINALES-----</option>                    
-                        <option>SIT UP</option>
-                        <option>ELEVACION DE PIERNAS</option>
-                        <option>PLANCHA ISOMÉTRICA</option>
-                        <option>MOUNTAIN CLIMBERS</option>
-                        <option>CABLE CRUNCH</option>
-                        <option>--DESCANSO--</option>
-                        <option>--DIA LIBRE--</option>
-                    </select>  
-                </div>
-                <button type='submit' className='btn btn-info m-2 mt-1'>Modificar</button>
-                <Link to ={`/show/${id}`} className='btn btn-danger m-2 mt-1'>Cancelar</Link>
-            </form>
+  
+        console.log('Rutina actualizada:', response.data);
+      } catch (error) {
+        console.error(error);
+      }
+      navigate(`/show/${id}`)
+    };
+  
+    return (
+        <div>
+            {Nav()}  
+            <div className='container mt-3 border'>
+            <h2 className='mt-2'>Editar Rutina</h2>
+            <div className='m-3'>
+            <h5 htmlFor="name">Nombre de la Rutina:</h5>
+            <div>
+            <input
+                type="text"
+                id="name"
+                value={routineName}
+                onChange={ (e)=> setRoutineName(e.target.value)}
+            />
+            </div>
+            </div>
+            
+            <div className='m-2'>
+            <h5 htmlFor="exercises">Ejercicios:</h5>
+            <div>
+                <select
+                    id="exercises"
+                    value={newExercise}
+                    onChange={(e) => setNewExercise(e.target.value)}
+                >
+                    <option value="">Seleccionar Ejercicio</option>
+                    {exercises.map((exercise) => (
+                    <option key={exercise.id} value={exercise.id}>
+                        {exercise.name}
+                    </option>
+                    ))}
+                </select>
+                <button className='btn btn-dark m-2 text-white' onClick={addExercise}>+</button>
+                <h5>Ejercicios Seleccionados:</h5>
+                <ul>
+                {selectedExercises.map((exercise) => (
+                    <p key={exercise.id}>
+                    {exercise.name}
+                        <button className='btn btn-danger m-1 text-white' onClick={() => removeExercise(exercise.id)}>-</button>
+                    </p>
+                ))}
+                </ul>
+            </div>
+           
+            </div>
+            
+            
+            
+            
+            <button className='btn btn-danger m-2 text-white' onClick={handleSubmit}>Guardar</button>
+        
+            <Link to ={`/show/${id}`} className='btn btn-primary m-2 text-white'>Cancelar</Link>
+            </div>
         </div>
-    </div>
-  )
+        
+    );
+   
+    
+    
+    
+    
+    
+    
+    
 }
 
 export default EditRutinas

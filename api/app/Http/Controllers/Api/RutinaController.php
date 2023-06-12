@@ -72,6 +72,11 @@ class RutinaController extends Controller
         $rutina = Rutina::findOrFail($request->id);
         $rutina->dia = $request->dia;
 
+         // Actualizar los ejercicios asociados a la rutina
+         $exerciseIds = $request->input('exercises');
+         $exercises = Exercise::whereIn('id', $exerciseIds)->get();
+
+         $rutina->exercises()->sync($exercises);
         $rutina->save();
         return $rutina;
     }
