@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import {Link} from 'react-router-dom'
 
 
-const api = 'https://proyectofinal.mysql.database.azure.com/api/register'
+const api = 'https://localhost:8000/api/register'
 
 const RegistroUsuarios = () => {
 
