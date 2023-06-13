@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import {Link} from 'react-router-dom'
 
 
-const api = 'https://localhost:8000/api/register'
+const api = 'http://localhost:8000/api/register'
 
 const RegistroUsuarios = () => {
 
