@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import {Link} from 'react-router-dom'
 
-const api = 'http://51.103.67.193:8000/api/login'
+const api = 'https://51.103.67.193:8000/api/login'
 
 const LoginUsuario = () => {
 
